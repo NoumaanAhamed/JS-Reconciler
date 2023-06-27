@@ -10,12 +10,26 @@ function fetchTodo() {
       todosElement.innerHTML = ""; //!removes duplicates in frontend
       todos.forEach((todo) => {
         const newTodo = document.createElement("div");
-        newTodo.innerHTML = `
-              <span>${todo.Title}:</span>
-              <span>${todo.Description}</span>
-              <button onclick="deleteTodo(${todo.id})">Delete</button>
-              <button onclick="updateTodo(${todo.id})">Update</button>
-              `;
+
+        const titleChild = document.createElement("span");
+        titleChild.innerHTML = todo.Title + ":";
+
+        const descriptionChild = document.createElement("span");
+        descriptionChild.innerHTML = todo.Description;
+
+        const deleteChild = document.createElement("button");
+        deleteChild.innerHTML = "Delete";
+        deleteChild.setAttribute("onclick", `deleteTodo(${todo.id})`);
+
+        const updateChild = document.createElement("button");
+        updateChild.innerHTML = "Update";
+        updateChild.setAttribute("onclick", `updateTodo(${todo.id})`);
+
+        newTodo.appendChild(titleChild);
+        newTodo.appendChild(descriptionChild);
+        newTodo.appendChild(deleteChild);
+        newTodo.appendChild(updateChild);
+
         newTodo.setAttribute("id", `todo-${todo.id}`);
         todosElement.appendChild(newTodo);
       });
@@ -37,12 +51,26 @@ function addTodo() {
     .then((res) => res.json())
     .then((todo) => {
       const newTodo = document.createElement("div");
-      newTodo.innerHTML = `
-        <span>${todo.Title}:</span>
-        <span>${todo.Description}</span>
-        <button onclick="deleteTodo(${todo.id})">Delete</button>
-        <button onclick="updateTodo(${todo.id})">Update</button>
-        `;
+
+      const titleChild = document.createElement("span");
+      titleChild.innerHTML = todo.Title + ":";
+
+      const descriptionChild = document.createElement("span");
+      descriptionChild.innerHTML = todo.Description;
+
+      const deleteChild = document.createElement("button");
+      deleteChild.innerHTML = "Delete";
+      deleteChild.setAttribute("onclick", `deleteTodo(${todo.id})`);
+
+      const updateChild = document.createElement("button");
+      updateChild.innerHTML = "Update";
+      updateChild.setAttribute("onclick", `updateTodo(${todo.id})`);
+
+      newTodo.appendChild(titleChild);
+      newTodo.appendChild(descriptionChild);
+      newTodo.appendChild(deleteChild);
+      newTodo.appendChild(updateChild);
+
       newTodo.setAttribute("id", `todo-${todo.id}`);
       titleInput.value = "";
       descriptionInput.value = "";
@@ -87,8 +115,15 @@ function updateTodo(id) {
       "Content-Type": "application/json",
     },
   })
-    .then(() => {
-      fetchTodo();
+    .then((res) => res.json())
+    .then((todo) => {
+      const updateTodo = document.getElementById(`todo-${todo.id}`);
+
+      const newTitle = updateTodo.children[0];
+      newTitle.innerHTML = todo.Title + ":";
+
+      const newDescription = updateTodo.children[1];
+      newDescription.innerHTML = todo.Description;
     })
     .catch((err) => {
       console.error("Error updating todos:", err);
